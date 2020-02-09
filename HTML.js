@@ -24,7 +24,7 @@ const colors = {
       photoBorderColor: "white"
     }
   };
-  
+
   function generateHTML(data) {
     return `<!DOCTYPE html>
   <html lang="en">
@@ -137,7 +137,7 @@ const colors = {
            padding-left: 100px;
            padding-right: 100px;
            }
-  
+
            .row {
              display: flex;
              flex-wrap: wrap;
@@ -145,7 +145,7 @@ const colors = {
              margin-top: 20px;
              margin-bottom: 20px;
            }
-  
+
            .card {
              padding: 20px;
              border-radius: 6px;
@@ -153,23 +153,38 @@ const colors = {
              color: ${colors[data.color].headerColor};
              margin: 20px;
            }
-           
+
            .col {
            flex: 1;
            text-align: center;
            }
-  
+
            a, a:hover {
            text-decoration: none;
            color: inherit;
            font-weight: bold;
            }
-  
-           @media print { 
-            body { 
-              zoom: .75; 
-            } 
+
+           @media print {
+            body {
+              zoom: .75;
+            }
            }
-        </style>`
+        </style>
+        <body>
+          <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <img src="${answers.gitPic}"/>
+            <h1 class="display-4">Hi! My name is ${answers.name}</h1>
+            <p class="lead">I am from ${answers.location}.</p>
+            <h3>Example heading <span class="badge badge-secondary">Contact Me</span></h3>
+            <ul class="list-group">
+              <li class="list-group-item">My GitHub username is ${answers.github}</li>
+              <li class="list-group-item">LinkedIn: ${answers.linkedin}</li>
+            </ul>
+          </div>
+        </div>
+        </body>
+        </html>
+        `
           }
-  

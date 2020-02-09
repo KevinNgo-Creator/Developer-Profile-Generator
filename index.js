@@ -1,6 +1,9 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const util = require("util");
+const pdf = require('html-pdf');
+var options = { format: 'Letter' }
+const axios = require('axios');
 
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -52,6 +55,7 @@ function generateHTML(answers) {
 <body>
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
+    <img src="${answers.gitPic}"/>
     <h1 class="display-4">Hi! My name is ${answers.name}</h1>
     <p class="lead">I am from ${answers.location}.</p>
     <h3>Example heading <span class="badge badge-secondary">Contact Me</span></h3>
@@ -67,12 +71,21 @@ function generateHTML(answers) {
 
 promptUser()
   .then(function(answers) {
-    const html = generateHTML(answers);
+    axios.get(`https://api.github.com/users/${answers.github}`)
+      .then(function (res) {
+        console.log(res.data);
+        answers.gitPic = res.data.avatar_url
+        const html = generateHTML(answers);
+        // writeFileAsync("index.html", html);
+        // var html = fs.readFileSync('./index.html', 'utf8');
+        pdf.create(html, options).toFile('./profile.pdf', function(err, res) {
+          if (err) return console.log(err);
+          console.log(res); // { filename: '/app/businesscard.pdf' }
+        })
+      })
 
-    return writeFileAsync("index.html", html);
   })
-  .then(function() {
-    console.log("Successfully wrote to index.html");
+  .then(function () {
   })
   .catch(function(err) {
     console.log(err);
