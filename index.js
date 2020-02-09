@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const util = require("util");
+const pdf = require('html-pdf');
+var options = { format: 'Letter' }
 
 const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -73,6 +75,13 @@ promptUser()
   })
   .then(function() {
     console.log("Successfully wrote to index.html");
+  })
+  .then(function () {
+    var html = fs.readFileSync('./index.html', 'utf8');
+    pdf.create(html, options).toFile('./profile.pdf', function(err, res) {
+      if (err) return console.log(err);
+      console.log(res); // { filename: '/app/businesscard.pdf' }
+    })
   })
   .catch(function(err) {
     console.log(err);
