@@ -20,6 +20,7 @@
     "axios": "^0.19.2",
     "html-pdf": "^2.2.0",
     "inquirer": "^7.0.4",
+    "phantomjs-prebuilt": "^2.1.16",
     "util": "^0.12.1"
   }
 }

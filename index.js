@@ -51,17 +51,19 @@ function generateHTML(answers) {
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <title>Document</title>
-</head>
+<style>
+</style>
+  </head>
 <body>
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <img src="${answers.gitPic}"/>
-    <h1 class="display-4">Hi! My name is ${answers.name}</h1>
-    <p class="lead">I am from ${answers.location}.</p>
+    <h1 class="name">Hi! My name is ${answers.name}</h1>
+    <p class="from">I am from ${answers.location}.</p>
     <h3>Example heading <span class="badge badge-secondary">Contact Me</span></h3>
     <ul class="list-group">
-      <li class="list-group-item">My GitHub username is ${answers.github}</li>
-      <li class="list-group-item">LinkedIn: ${answers.linkedin}</li>
+      <li class="github">My GitHub username is ${answers.github}</li>
+      <li class="linked">LinkedIn: ${answers.linkedin}</li>
     </ul>
   </div>
 </div>
@@ -71,22 +73,43 @@ function generateHTML(answers) {
 
 promptUser()
   .then(function(answers) {
-    axios.get(`https://api.github.com/users/${answers.github}`)
+    return axios.get(`https://api.github.com/users/${answers.github}`)
       .then(function (res) {
         console.log(res.data);
         answers.gitPic = res.data.avatar_url
-        const html = generateHTML(answers);
+        return generateHTML(answers);
         // writeFileAsync("index.html", html);
         // var html = fs.readFileSync('./index.html', 'utf8');
-        pdf.create(html, options).toFile('./profile.pdf', function(err, res) {
-          if (err) return console.log(err);
-          console.log(res); // { filename: '/app/businesscard.pdf' }
-        })
+        
       })
-
   })
-  .then(function () {
-  })
+  .then(function (html) {
+    return new Promise((resolve, reject)=>{
+      pdf.create(html.toString(), options).toFile('./profile.pdf', function(err, res) {
+        if (err) return reject(err);
+        resolve(res); // { filename: '/app/businesscard.pdf' }
+      })
+    });    
+  }).then(console.log)
   .catch(function(err) {
     console.log(err);
   });
+
+  // promptUser()
+  // .then(function(answers) {
+  //   const html = generateHTML(answers);
+  //   return writeFileAsync("index.html", html);
+  // })
+  // .then(function() {
+  //   console.log("Successfully wrote to index.html");
+  // })
+  // .then(function () {
+  //   var html = fs.readFileSync('./index.html', 'utf8');
+  //   pdf.create(html, options).toFile('./profile.pdf', function(err, res) {
+  //     if (err) return console.log(err);
+  //     console.log(res); 
+  //   })
+  // })
+  // .catch(function(err) {
+  //   console.log(err);
+  // });
